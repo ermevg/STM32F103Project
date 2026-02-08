@@ -7,17 +7,20 @@ CC = $(ARCH)-gcc
 OBJCOPY = $(ARCH)-objcopy
 SIZE = $(ARCH)-size
 
+BUILD_DIR = build
+OBJ_DIR = obj
+
+OPT = -O0
+DEBUG_FLAGS = -g
+
 # Флаги компиляции: добавляем -ffunction-sections для оптимизации
-CFLAGS = -mcpu=$(MCU) -mthumb -Wall -g -O0 -ffunction-sections -fdata-sections
-ASFLAGS = -mcpu=$(MCU) -mthumb -g -c
+CFLAGS = -mcpu=$(MCU) -mthumb -Wall $(DEBUG_FLAGS) $(OPT) -ffunction-sections -fdata-sections
+ASFLAGS = -mcpu=$(MCU) -mthumb $(DEBUG_FLAGS) -c
 
 # Флаги линковки: 
 # 1. --specs=nosys.specs убирает ошибки _write, _read, _sbrk
 # 2. -Wl,--gc-sections удаляет неиспользуемый код
-LDFLAGS = -mcpu=$(MCU) -mthumb -T STM32F103C8TX_FLASH.ld --specs=nosys.specs -Wl,-Map=firmware.map -Wl,--gc-sections
-
-OBJ_DIR = obj
-BUILD_DIR = build
+LDFLAGS = -mcpu=$(MCU) -mthumb -T STM32F103C8TX_FLASH.ld --specs=nosys.specs -Wl,-Map=$(BUILD_DIR)/firmware.map -Wl,--gc-sections
 
 C_SRC = main.c
 S_SRC = Startup/startup_stm32f103c8tx.s
@@ -26,9 +29,17 @@ OBJ += $(addprefix $(OBJ_DIR)/, $(notdir $(S_SRC:.s=.o)))
 
 VPATH = $(dir $(C_SRC) $(S_SRC))
 
-all: $(BUILD_DIR)/firmware.bin
+all: debug
+
+debug: $(BUILD_DIR)/firmware.bin
 	@$(SIZE) $(BUILD_DIR)/firmware.elf
-	@echo "Build completed!"
+	@echo "Build completed!(DEBUG MODE)!"
+
+release: OPT = -Os
+release: DEBUG_FLAGS =
+release: clean $(BUILD_DIR)/firmware.bin
+	@$(SIZE) $(BUILD_DIR)/firmware.elf
+	@echo "Build completed!(RELEASE MODE)"
 
 # Собираем ASM через GCC! Это важно для Thumb
 $(OBJ_DIR)/%.o: %.s | $(OBJ_DIR) # - | Важно чтобы make не проверял время каталога
@@ -50,4 +61,4 @@ clean:
 	@rm -rf $(OBJ_DIR) $(BUILD_DIR)
 	@echo "Delete successful"
 
-.PHONY: all clean
+.PHONY: all clean release debug
