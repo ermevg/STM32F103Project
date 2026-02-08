@@ -4,27 +4,31 @@ MCU = cortex-m3
 ARCH = arm-none-eabi
 
 CC = $(ARCH)-gcc
-AS = $(ARCH)-as
-LD = $(ARCH)-ld
 OBJCOPY = $(ARCH)-objcopy
-OBJDUMP = $(ARCH)-objdump
+SIZE = $(ARCH)-size
 
-CFLAGS = -mcpu=$(MCU) -mthumb -nostdlib -Wall -Wextra -g
-LDFLAGS = -T STM32F103C8TX_FLASH.ld -nostdlib -Wl, -Map=firmware.map
+# Флаги компиляции: добавляем -ffunction-sections для оптимизации
+CFLAGS = -mcpu=$(MCU) -mthumb -Wall -g -O0 -ffunction-sections -fdata-sections
+ASFLAGS = -mcpu=$(MCU) -mthumb -g -c
+
+# Флаги линковки: 
+# 1. --specs=nosys.specs убирает ошибки _write, _read, _sbrk
+# 2. -Wl,--gc-sections удаляет неиспользуемый код
+LDFLAGS = -mcpu=$(MCU) -mthumb -T STM32F103C8TX_FLASH.ld --specs=nosys.specs -Wl,-Map=firmware.map -Wl,--gc-sections
 
 C_SRC = main.c
 S_SRC = Startup/startup_stm32f103c8tx.s
-
-OBJ = $(C_SRC:.c=.o) $(S_SRC:.s=.o)
+OBJ = main.o Startup/startup_stm32f103c8tx.o
 
 all: firmware.bin
+	@$(SIZE) firmware.elf
 
-%.o: %.s
-	$(AS) $(CFLAGS) -o $@ $<
+# Собираем ASM через GCC! Это важно для Thumb
+Startup/startup_stm32f103c8tx.o: Startup/startup_stm32f103c8tx.s
+	$(CC) $(ASFLAGS) -o $@ $<
 
-
-%.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+main.o: main.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 firmware.elf: $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $^
@@ -32,11 +36,7 @@ firmware.elf: $(OBJ)
 firmware.bin: firmware.elf
 	$(OBJCOPY) -O binary $< $@
 
-
-firmware.hex: firmware.elf
-	$(OBJCOPY) -O ihex $< $@
-
 clean:
-	rm -f *.o *.elf *.bin *.hex firmware.map
+	rm -f *.o Startup/*.o *.elf *.bin *.map
 
 .PHONY: all clean
