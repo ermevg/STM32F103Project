@@ -16,27 +16,38 @@ ASFLAGS = -mcpu=$(MCU) -mthumb -g -c
 # 2. -Wl,--gc-sections удаляет неиспользуемый код
 LDFLAGS = -mcpu=$(MCU) -mthumb -T STM32F103C8TX_FLASH.ld --specs=nosys.specs -Wl,-Map=firmware.map -Wl,--gc-sections
 
+OBJ_DIR = obj
+BUILD_DIR = build
+
 C_SRC = main.c
 S_SRC = Startup/startup_stm32f103c8tx.s
-OBJ = main.o Startup/startup_stm32f103c8tx.o
+OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(C_SRC:.c=.o)))
+OBJ += $(addprefix $(OBJ_DIR)/, $(notdir $(S_SRC:.s=.o)))
 
-all: firmware.bin
-	@$(SIZE) firmware.elf
+VPATH = $(dir $(C_SRC) $(S_SRC))
+
+all: $(BUILD_DIR)/firmware.bin
+	@$(SIZE) $(BUILD_DIR)/firmware.elf
+	@echo "Build completed!"
 
 # Собираем ASM через GCC! Это важно для Thumb
-Startup/startup_stm32f103c8tx.o: Startup/startup_stm32f103c8tx.s
+$(OBJ_DIR)/%.o: %.s | $(OBJ_DIR) # - | Важно чтобы make не проверял время каталога
 	$(CC) $(ASFLAGS) -o $@ $<
 
-main.o: main.c
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-firmware.elf: $(OBJ)
+$(BUILD_DIR)/firmware.elf: $(OBJ) | $(BUILD_DIR)
 	$(CC) $(LDFLAGS) -o $@ $^
 
-firmware.bin: firmware.elf
+$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf
 	$(OBJCOPY) -O binary $< $@
 
+$(OBJ_DIR) $(BUILD_DIR):
+	mkdir -p $@
+
 clean:
-	rm -f *.o Startup/*.o *.elf *.bin *.map
+	@rm -rf $(OBJ_DIR) $(BUILD_DIR)
+	@echo "Delete successful"
 
 .PHONY: all clean
