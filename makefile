@@ -14,7 +14,7 @@ OPT = -O0
 DEBUG_FLAGS = -g
 
 # Флаги компиляции: добавляем -ffunction-sections для оптимизации
-CFLAGS = -mcpu=$(MCU) -mthumb -Wall $(DEBUG_FLAGS) $(OPT) -ffunction-sections -fdata-sections
+CFLAGS = -mcpu=$(MCU) -mthumb -Wall $(DEBUG_FLAGS) $(OPT) -ffunction-sections -fdata-sections -MMD -MP
 ASFLAGS = -mcpu=$(MCU) -mthumb $(DEBUG_FLAGS) -c
 
 # Флаги линковки: 
@@ -62,3 +62,5 @@ clean:
 	@echo "Delete successful"
 
 .PHONY: all clean release debug
+
+-include $(wildcard $(OBJ_DIR)/*.d)
