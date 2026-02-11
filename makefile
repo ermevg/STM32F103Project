@@ -13,8 +13,11 @@ OBJ_DIR = obj
 OPT = -O0
 DEBUG_FLAGS = -g
 
+INC_DIRS = -I. -Isys_init
+
 # Флаги компиляции: добавляем -ffunction-sections для оптимизации
 CFLAGS = -mcpu=$(MCU) -mthumb -Wall $(DEBUG_FLAGS) $(OPT) -ffunction-sections -fdata-sections -MMD -MP
+CFLAGS +=$(INC_DIRS)
 ASFLAGS = -mcpu=$(MCU) -mthumb $(DEBUG_FLAGS) -c
 
 # Флаги линковки: 
@@ -22,7 +25,7 @@ ASFLAGS = -mcpu=$(MCU) -mthumb $(DEBUG_FLAGS) -c
 # 2. -Wl,--gc-sections удаляет неиспользуемый код
 LDFLAGS = -mcpu=$(MCU) -mthumb -T STM32F103C8TX_FLASH.ld --specs=nosys.specs -Wl,-Map=$(BUILD_DIR)/firmware.map -Wl,--gc-sections
 
-C_SRC := $(wildcard *.c )
+C_SRC := $(wildcard *.c ) $(wildcard sys_init/*.c ) 
 S_SRC := Startup/startup_stm32f103c8tx.s
 OBJ = $(addprefix $(OBJ_DIR)/, $(notdir $(C_SRC:.c=.o)))
 OBJ += $(addprefix $(OBJ_DIR)/, $(notdir $(S_SRC:.s=.o)))

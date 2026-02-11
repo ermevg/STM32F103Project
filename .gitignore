@@ -9,4 +9,5 @@ build/
 obj/
 !.vscode/launch.json
 !.vscode/tasks.json
-
+!.vscode/c_cpp_properties.json
+!.vscode/settings.json
