@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "STM32 CORTEX-M",
+            "includePath": [
+                "${workspaceFolder}/sys_init",
+                "/usr/lib/gcc/arm-none-eabi/14.2.1/include",
+                "/usr/lib/gcc/arm-none-eabi/14.2.1/include-fixed",
+                "/usr/lib/arm-none-eabi/include"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/arm-none-eabi-gcc",
+            "cStandard": "c17",
+            "intelliSenseMode": "linux-gcc-arm",
+            "cppStandard": "c++14"
+        }
+    ],
+    "version": 4
+}

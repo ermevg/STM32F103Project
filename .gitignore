@@ -4,7 +4,7 @@
 *.log
 *.o
 *.map
-.vscode/
+.vscode/*
 build/
 obj/
 !.vscode/launch.json

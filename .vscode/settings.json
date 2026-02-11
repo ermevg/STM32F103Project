@@ -1,0 +1,27 @@
+
+{
+   
+    
+    "VsCodeTaskButtons.showCounter":true,
+    "VsCodeTaskButtons.tasks":[
+        {
+            "label": "Build debug",
+            "task": "Make Debug",
+            "tooltip": "Start building firmware for dedug"
+        },
+        {
+            "label": "Build release",
+            "task": "Make Release",
+            "tooltip": "Start building firmware for release"
+        },
+        {
+            "label": "Clean",
+            "task": "Clean Project",
+            "tooltip": "Delete firmware and temporary files"
+        }
+
+    ],
+    "makefile.configureOnOpen": false,
+    
+
+}
