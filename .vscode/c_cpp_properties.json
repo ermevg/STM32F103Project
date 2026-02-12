@@ -3,7 +3,7 @@
         {
             "name": "STM32 CORTEX-M",
             "includePath": [
-                "${workspaceFolder}/sys_init",
+                "${workspaceFolder}/**",
                 "/usr/lib/gcc/arm-none-eabi/14.2.1/include",
                 "/usr/lib/gcc/arm-none-eabi/14.2.1/include-fixed",
                 "/usr/lib/arm-none-eabi/include"
