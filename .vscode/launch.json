@@ -18,7 +18,9 @@
             "gdbPath": "gdb-multiarch", 
             "preLaunchTask": "Make Debug",
             "svdFile": "STM32F103.svd",
-            "toolchainPrefix": "arm-none-eabi"
+            "toolchainPrefix": "arm-none-eabi",
+            "armToolchainPath":"/usr/bin"
+
         }
     ]
 }
