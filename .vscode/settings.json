@@ -18,6 +18,11 @@
             "label": "Clean",
             "task": "Clean Project",
             "tooltip": "Delete firmware and temporary files"
+        },
+        {
+            "label": "Flash Release",
+            "task": "Flash Release",
+            "tooltip": "FLASH MCU"
         }
 
     ],

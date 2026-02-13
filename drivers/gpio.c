@@ -15,5 +15,13 @@ void GPIO_Init(void)
     GPIOB_CRL &= ~(0xF << 8);
     GPIOB_CRL |= (0x3 << 8);
     GPIOB_BSSR = (1 << (2));
+    
+    uint32_t i = 0;
+
+    while (i < 1000000){ i++ ;}
+    
+    GPIOB_BSSR = (1 << (2+16));
+    
+    
 
 };

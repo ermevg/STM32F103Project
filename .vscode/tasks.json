@@ -36,7 +36,13 @@
                 "base": "$gcc",
                 "fileLocation": ["relative", "${workspaceFolder}"]
             }
-        }
+        },
+        {
+            "label":"Flash Release",
+            "type": "shell",
+            "command": "make",
+            "args": ["flash"]
+        },
 
     ]
 

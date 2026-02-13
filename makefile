@@ -20,6 +20,11 @@ CFLAGS = -mcpu=$(MCU) -mthumb -Wall $(DEBUG_FLAGS) $(OPT) -ffunction-sections -f
 CFLAGS +=$(INC_DIRS)
 ASFLAGS = -mcpu=$(MCU) -mthumb $(DEBUG_FLAGS) -c
 
+#Флаги прошивки для OpenOCD
+INTERFACE = interface/stlink.cfg
+TARGET_CFG = target/stm32f1x.cfg
+BINARY = $(BUILD_DIR)/firmware.bin
+
 # Флаги линковки: 
 # 1. --specs=nosys.specs убирает ошибки _write, _read, _sbrk
 # 2. -Wl,--gc-sections удаляет неиспользуемый код
@@ -59,6 +64,10 @@ $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf
 
 $(OBJ_DIR) $(BUILD_DIR):
 	mkdir -p $@
+
+flash: all
+	openocd -f $(INTERFACE) -f $(TARGET_CFG) \
+	-c "program $(BINARY) verify reset exit 0x08000000"
 
 clean:
 	@rm -rf $(OBJ_DIR) $(BUILD_DIR)
