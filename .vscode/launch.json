@@ -15,7 +15,10 @@
                 "target/stm32f1x.cfg"
             ],
             "runToEntryPoint": "main",
-            "gdbPath": "gdb-multiarch" 
+            "gdbPath": "gdb-multiarch", 
+            "preLaunchTask": "Make Debug",
+            "svdFile": "STM32F103.svd",
+            "toolchainPrefix": "arm-none-eabi"
         }
     ]
 }

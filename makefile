@@ -34,7 +34,7 @@ VPATH = $(dir $(C_SRC) $(S_SRC))
 
 all: debug
 
-debug: $(BUILD_DIR)/firmware.bin
+debug: clean $(BUILD_DIR)/firmware.bin
 	@$(SIZE) $(BUILD_DIR)/firmware.elf
 	@echo "Build completed!(DEBUG MODE)!"
 
