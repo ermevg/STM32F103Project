@@ -8,7 +8,7 @@ int main (void){
 
     SystemClock_Config();
 
-    GPIO_Init();
+    //GPIO_Init();
 
     while(1)
     {

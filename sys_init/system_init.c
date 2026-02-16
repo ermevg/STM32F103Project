@@ -1,5 +1,6 @@
 
 #include "system_init.h"
+#include "main.h"
 
 #define RCC_BASE (0x40021000)
 #define RCC_CR (*(volatile uint32_t*) (RCC_BASE + 0x00))
