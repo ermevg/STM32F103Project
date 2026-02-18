@@ -11,10 +11,11 @@
 #define TIM2_ARR (*(volatile uint32_t*) (TIM2_BASE + 0x2C))
 #define TIM2_EGR (*(volatile uint32_t*) (TIM2_BASE + 0x14))
 #define TIM2_SR (*(volatile uint32_t*) (TIM2_BASE + 0x10))
+#define TIM2_CNT (*(volatile uint32_t*) (TIM2_BASE + 0x24))
 
 #define TIM2_EGR_UPDATE (1 << 0)
 #define TIM2_CEN (1 << 0)
-
+#define TIM2_ARR_CNT (0xFFFF)
 
 
 
@@ -23,8 +24,14 @@ void TIM2_1ms_Init(void)
 {
     RCC_APB1ENR |= RCC_TIM2_EN;
     TIM2_PSC = 15999;
-    TIM2_ARR = 999;
+    TIM2_ARR = TIM2_ARR_CNT;
     TIM2_EGR |= TIM2_EGR_UPDATE;
     TIM2_SR &= ~(TIM2_EGR_UPDATE);
     TIM2_CR1 |= TIM2_CEN;
+}
+
+uint32_t GET_TIM2_CNT(void)
+{
+    uint32_t cnt = TIM2_CNT;
+    return cnt;
 }

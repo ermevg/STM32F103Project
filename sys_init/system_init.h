@@ -7,6 +7,6 @@ void SystemInit(void);
 
 void SystemClock_Config(void);
 
-
+void SYSCLK_CHECK(void);
 
 #endif

@@ -4,7 +4,14 @@
 
 #include "main.h"
 
+void GPIOA_Init(void);
 
-void GPIO_Init(void);
+void GPIOB_Init(void);
+
+void GPIOB_SET_PIN2(void);
+
+void GPIOB_RESET_PIN2(void);
+
+uint32_t GPIOA_READ_PIN0(void);
 
 #endif

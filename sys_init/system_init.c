@@ -6,6 +6,18 @@
 #define RCC_CR (*(volatile uint32_t*) (RCC_BASE + 0x00))
 #define RCC_CFGR (*(volatile uint32_t*) (RCC_BASE + 0x04))
 #define RCC_CIR (*(volatile uint32_t*) (RCC_BASE + 0x08))
+#define RCC_APB2ENR (*(volatile uint32_t*) (RCC_BASE + 0x18))
+
+#define GPIOA_BASE (0x40010800)
+#define GPIOA_CRL (*(volatile uint32_t*) (GPIOA_BASE + 0x00))
+#define GPIOA_CRH (*(volatile uint32_t*) (GPIOA_BASE + 0x04))
+
+#define GPIOA_APB2_CLOCK_EN (1 << 2)
+
+#define PIN_MODE_RESET (~(0xF))
+#define PA8_MODE (0xB << 0)
+#define MCO_SRC_SYSCLK (4 << 24)
+
 
 #define RCC_RESET (0)
 #define RCC_HSI_ON (1 << 0)
@@ -50,4 +62,13 @@ void SystemClock_Config(void)
     RCC_CFGR |= RCC_PLL_SW;
 
     while(!(RCC_CFGR & RCC_SYSCLK_PLL));
+}
+
+void SYSCLK_CHECK(void)
+{
+    RCC_APB2ENR |= GPIOA_APB2_CLOCK_EN;
+    GPIOA_CRH &= PIN_MODE_RESET;
+    GPIOA_CRH |= PA8_MODE;
+    RCC_CFGR &= ~(7 << 24);
+    RCC_CFGR |= MCO_SRC_SYSCLK;
 }

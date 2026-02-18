@@ -65,7 +65,7 @@ $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf
 $(OBJ_DIR) $(BUILD_DIR):
 	mkdir -p $@
 
-flash: all
+flash: release
 	openocd -f $(INTERFACE) -f $(TARGET_CFG) \
 	-c "program $(BINARY) verify reset exit 0x08000000"
 
