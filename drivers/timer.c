@@ -19,8 +19,7 @@
 
 
 
-
-void TIM2_1ms_Init(void)
+void TIM2_1MS_INIT(void)
 {
     RCC_APB1ENR |= RCC_TIM2_EN;
     TIM2_PSC = 15999;
@@ -30,8 +29,8 @@ void TIM2_1ms_Init(void)
     TIM2_CR1 |= TIM2_CEN;
 }
 
-uint32_t GET_TIM2_CNT(void)
+uint16_t GET_TIM2_CNT(void)
 {
-    uint32_t cnt = TIM2_CNT;
+    uint16_t cnt = TIM2_CNT;
     return cnt;
 }

@@ -3,8 +3,8 @@
 
 #include "main.h"
 
-void TIM2_1ms_Init(void);
+void TIM2_1MS_INIT(void);
 
-uint32_t GET_TIM2_CNT(void);
+uint16_t GET_TIM2_CNT(void);
 
 #endif
