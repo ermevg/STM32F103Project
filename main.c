@@ -2,6 +2,7 @@
 #include "system_init.h"
 #include "gpio.h"
 #include "timer.h"
+#include "nvic_config.h"
 
 
 int main (void){
@@ -12,8 +13,7 @@ int main (void){
     
     GPIOA_Init();
 
-    //TIM2_1ms_Init();
-
+    TIM2_1ms_Init();
 
     while(1)
     {
