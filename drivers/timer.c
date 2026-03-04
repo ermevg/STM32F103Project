@@ -1,6 +1,4 @@
 #include "timer.h"
-#include "nvic_config.h"
-#include "gpio.h"
 
 
 #define RCC_BASE (0x40021000)

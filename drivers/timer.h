@@ -2,6 +2,8 @@
 #define TIMER_H
 
 #include "main.h"
+#include "nvic_config.h"
+#include "gpio.h"
 
 
 void TIM2_1ms_Init(void);

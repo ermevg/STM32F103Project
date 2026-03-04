@@ -1,6 +1,6 @@
 
 #include "system_init.h"
-#include "main.h"
+
 
 #define RCC_BASE (0x40021000)
 #define RCC_CR (*(volatile uint32_t*) (RCC_BASE + 0x00))
@@ -25,7 +25,6 @@
 #define RCC_HSE_RDY (1 << 17)
 
 #define RCC_PLL_RDY (1 << 25)
-#define RCC_PLL_ON (1 << 24)
 #define RCC_PLL_ON (1 << 24)
 #define RCC_PLL_SW (2 << 0)
 #define PLL_MULL0 (0xF << 18)
