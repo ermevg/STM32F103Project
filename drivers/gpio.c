@@ -27,10 +27,11 @@
 #define PA0_READ (1 << 0)
 
 
-
 #define PB2_ON (1 << 2)
 #define PB2_OFF (1 << (2+16))
 
+#define PB0_ON (1 << 0)
+#define PB0_OFF (1 << (0+16))
 
 void GPIOA_Init(void)
 {
@@ -46,6 +47,8 @@ void GPIOB_Init(void)
     RCC_APB2ENR |= GPIOB_APB2_CLOCK_EN;
     GPIOB_CRL &= ~(0xF << 8);
     GPIOB_CRL |= (0x3 << 8);
+    GPIOB_CRL &= ~(0xF << 0);
+    GPIOB_CRL |= (0x3 << 0);
 
 }
 
@@ -57,6 +60,16 @@ void GPIOB_SET_PIN2(void)
 void GPIOB_RESET_PIN2(void)
 {
     GPIOB_BSRR = PB2_OFF;
+}
+
+void GPIOB_SET_PIN0(void)
+{
+    GPIOB_BSRR = PB0_ON;
+}
+
+void GPIOB_RESET_PIN0(void)
+{
+    GPIOB_BSRR = PB0_OFF;
 }
 
 uint32_t GPIOA_READ_PIN0(void)

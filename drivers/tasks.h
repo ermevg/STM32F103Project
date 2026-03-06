@@ -7,7 +7,7 @@
 
 uint16_t check_time (uint16_t*);
 
-void pin_delay(void);
+void pin_delay(uint16_t* start_time, uint8_t* f);
 
 
 #endif
