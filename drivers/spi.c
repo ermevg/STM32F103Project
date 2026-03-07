@@ -58,8 +58,8 @@ void spi_transmit(uint8_t* buff)
         SP1_DR = *buff;
         while(!(SP1_SR & SPI1_RXNE));
         (void)SP1_DR;
-        while (SP1_SR & SPI1_BSY);
         buff++;
     }; 
+    while (SP1_SR & SPI1_BSY);
     GPIOA_BSRR = (1 << 4);
 }

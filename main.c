@@ -5,6 +5,8 @@
 #include "nvic_config.h"
 #include "uart.h"
 #include "spi.h"
+#include "exti.h"
+
 
 
 int main (void){
@@ -13,10 +15,11 @@ int main (void){
 
     init_spi();
 
+    init_exti0();
+    
     while(1)
     {
-        spi_transmit("Hello World");
-        for(volatile int i = 0; i < 500000; i++);
+       
     }
 
     return 0;
