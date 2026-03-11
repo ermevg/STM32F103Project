@@ -17,7 +17,7 @@
 
 #define TIM2_EGR_UPDATE (1 << 0)
 #define TIM2_CEN (1 << 0)
-#define TIM2_ARR_CNT (1000)
+#define TIM2_ARR_CNT (150)
 #define TIM2_IRQ_EN (1 << 0)
 #define TIM2_UIF (1 << 0)
 
@@ -44,19 +44,7 @@ uint32_t GET_TIM2_CNT(void)
 
 void TIM2_IRQHandler(void)
 {
-    static uint8_t ticks = 0;
-
-    if(TIM2_SR & TIM2_UIF) TIM2_SR &= ~TIM2_UIF; 
-    if (ticks == 0)
-    {
-        GPIOB_SET_PIN2();
-        ticks = 1;
-    }
-    else
-    {
-        GPIOB_RESET_PIN2();
-        ticks = 0;
-    }
+    
     
     
 }

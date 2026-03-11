@@ -49,17 +49,17 @@ void init_spi(void)
     SP1_CR1 |= SPI1_EN;
 }
 
-void spi_transmit(uint8_t* buff)
+void spi_transmit(uint16_t data)
 {
     GPIOA_BSRR |= (1 << (4 + 16));
-    while(*buff != 0)
-    {
-        while (!(SP1_SR & SPI1_TXE));
-        SP1_DR = *buff;
-        while(!(SP1_SR & SPI1_RXNE));
-        (void)SP1_DR;
-        buff++;
-    }; 
+    while (!(SP1_SR & SPI1_TXE));
+    SP1_DR = (data >> 8) & 0xFF;
+    while(!(SP1_SR & SPI1_RXNE));
+    (void)SP1_DR;
+    while (!(SP1_SR & SPI1_TXE));
+    SP1_DR = data & 0xFF;
+    while(!(SP1_SR & SPI1_RXNE));
+    (void)SP1_DR;
     while (SP1_SR & SPI1_BSY);
-    GPIOA_BSRR = (1 << 4);
+    GPIOA_BSRR |= (1 << 4);
 }

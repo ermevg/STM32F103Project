@@ -1,4 +1,6 @@
 #include "exti.h"
+#include "adc.h"
+
 
 #define AFIO_BASE (0x40010000)
 #define AFIO_EXTICR1 (*(volatile uint32_t*)(AFIO_BASE + 0x08))
@@ -47,7 +49,8 @@ void EXTI0_IRQHandler(void)
 {
     if(EXTI_PR & EXTI0_IRQ_OCCUR)
     {
-        spi_transmit((uint8_t*)"Hello World");
+        for(volatile int i = 0; i < 200000; i++); 
+        spi_transmit(read_adc());
         EXTI_PR |= EXTI0_IRQ_OCCUR;
     }
 }
