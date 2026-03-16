@@ -39,7 +39,7 @@ void init_uart1(void)
     USART1_CR1 |= USART1_EN;
 }
 
-void uart1_send_char(char* buffer)
+void uart1_send_string(char* buffer)
 {
     while(*buffer != 0)
     {
@@ -49,4 +49,40 @@ void uart1_send_char(char* buffer)
     }    
     
     
+}
+
+void uart1_send_char(char c)
+{
+        while(!(USART1_SR & USART1_TXE));
+        USART1_DR = c;    
+}
+
+void uart1_send_int(int number)
+{
+    char str[10];
+    int i = 0;
+    if(number == 0)
+    {
+        uart1_send_char('0');
+    }
+    else
+    {
+        if(number < 0)
+        {
+            uart1_send_char('-');
+            number = -number;
+        }
+        while (number > 0)
+        {
+            str[i++] = (number % 10) + '0';
+            number /= 10;
+        }
+        while(i > 0)
+        {
+            uart1_send_char(str[--i]);
+        }    
+    }
+
+    uart1_send_char('\r');
+    uart1_send_char('\n');
 }

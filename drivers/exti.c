@@ -1,5 +1,6 @@
 #include "exti.h"
 #include "adc.h"
+#include "uart.h"
 
 
 #define AFIO_BASE (0x40010000)
@@ -49,8 +50,10 @@ void EXTI0_IRQHandler(void)
 {
     if(EXTI_PR & EXTI0_IRQ_OCCUR)
     {
-        for(volatile int i = 0; i < 200000; i++); 
-        spi_transmit(read_adc());
+        // for(volatile int i = 0; i < 200000; i++); 
+        // spi_transmit(read_adc());
+        //uart1_send_char("PING!\r\n");
+        uart1_send_int(-1369);
         EXTI_PR |= EXTI0_IRQ_OCCUR;
     }
 }

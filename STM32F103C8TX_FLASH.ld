@@ -48,6 +48,9 @@ MEMORY
   FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 64K
 }
 
+/* PROVIDE(stack_space = ORIGIN(RAM)); 
+PROVIDE(_end_stack = ORIGIN(RAM) + 4K); */
+
 /* Sections */
 SECTIONS
 {
@@ -134,6 +137,7 @@ SECTIONS
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
+    /* . = ORIGIN(RAM) + 4K; */
   /* Initialized data sections into "RAM" Ram type memory */
   .data :
   {
@@ -166,6 +170,10 @@ SECTIONS
   } >RAM
 
   /* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
+  /* . = ALIGN(8);
+  _end = .;
+  PROVIDE(_start_heap = _end);  */
+  
   ._user_heap_stack :
   {
     . = ALIGN(8);
