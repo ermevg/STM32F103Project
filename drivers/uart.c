@@ -25,6 +25,7 @@
 #define USART1_RX_EN (1 << 2)
 #define USART1_BD (0x8B) // 139
 #define USART1_TXE (1 << 7)
+#define USART1_RXNE (1 << 5)
 
 void init_uart1(void)
 {
@@ -85,4 +86,10 @@ void uart1_send_int(int number)
 
     uart1_send_char('\r');
     uart1_send_char('\n');
+}
+
+uint8_t uart1_recieve(void)
+{
+    while (!(USART1_SR & USART1_RXNE));
+    return (uint8_t)USART1_DR;
 }

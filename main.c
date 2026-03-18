@@ -21,10 +21,11 @@ int main (void){
     
     init_uart1();
 
+
     while(1)
     {
-    //    for(volatile int i = 0; i < 900000; i++);
-    //    uart1_send_char("PING!\r\n");
+        
+        
     }
 
     return 0;
