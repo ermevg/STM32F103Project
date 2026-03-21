@@ -35,5 +35,6 @@ struct extra_frame{
 struct task_block *task_create (char* name, void (*start)(void 
 *arg), void *arg);
 
+void task_terminated(void);
 
 #endif

@@ -1,4 +1,5 @@
 #include "kernel_internal.h"
+#include "pendsv.h"
 
 static struct task_block TASKS[MAX_TASKS];
 static int n_tasks = 1;
@@ -8,6 +9,18 @@ void task_terminated(void)
 {
     while(1);
 }
+
+static void task_stack_init(struct task_block *t)
+{
+    struct stack_frame *tf;
+    t->sp -= sizeof(struct stack_frame);
+    tf = (struct stack_frame*)(t->sp);
+    tf->r0 = (uint32_t)t->arg;
+    tf->pc = (uint32_t)t->start;
+    tf->lr = (uint32_t)task_terminated;
+    tf->xpsr = (1 << 24);
+    t->sp -= sizeof(struct extra_frame);
+};
 
 struct task_block *task_create (char* name, void (*start)(void 
 *arg), void *arg)
@@ -32,17 +45,6 @@ struct task_block *task_create (char* name, void (*start)(void
     
 }
 
-static void task_stack_init(struct task_block *t)
-{
-    struct stack_frame *tf;
-    t->sp -= sizeof(struct stack_frame);
-    tf = (struct stack_frame*)(t->sp);
-    tf->r0 = (uint32_t)t->arg;
-    tf->pc = (uint32_t)t->start;
-    tf->lr = (uint32_t)task_terminated;
-    tf->xpsr = (1 << 24);
-    t->sp -= sizeof(struct extra_frame);
-};
 
 static void __attribute__((naked)) store_context(void)
 {
@@ -60,3 +62,19 @@ static void __attribute__((naked)) restore_context(void)
     asm volatile("bx lr");
 }
 
+void __attribute__((naked)) PendSV_Handler(void) 
+{
+    store_context();
+    asm volatile("mrs %0, msp" : "=r"(
+        TASKS[running_task_id].sp));
+    TASKS[running_task_id].state = TASK_READY;
+    running_task_id++;
+    if(running_task_id >= n_tasks)
+        running_task_id = 0;
+    TASKS[running_task_id].state = TASK_RUNNING;
+    asm volatile("msr msp, %0" :: "r"(
+        TASKS[running_task_id].sp));
+    restore_context();
+    asm volatile("mov lr, %0" :: "r" (0xFFFFFFF9));
+    asm volatile("bx lr");    
+}
