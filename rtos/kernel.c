@@ -1,9 +1,8 @@
 #include "kernel_internal.h"
-#include "pendsv.h"
 
-static struct task_block TASKS[MAX_TASKS];
-static int n_tasks = 1;
-static int running_task_id = 0;
+struct task_block TASKS[MAX_TASKS];
+int n_tasks = 1;
+int running_task_id = 0;
 
 void task_terminated(void)
 {
@@ -13,13 +12,13 @@ void task_terminated(void)
 static void task_stack_init(struct task_block *t)
 {
     struct stack_frame *tf;
-    t->sp -= sizeof(struct stack_frame);
+    t->sp -= sizeof(struct stack_frame)/4;
     tf = (struct stack_frame*)(t->sp);
     tf->r0 = (uint32_t)t->arg;
     tf->pc = (uint32_t)t->start;
     tf->lr = (uint32_t)task_terminated;
     tf->xpsr = (1 << 24);
-    t->sp -= sizeof(struct extra_frame);
+    t->sp -= sizeof(struct extra_frame)/4;
 };
 
 struct task_block *task_create (char* name, void (*start)(void 

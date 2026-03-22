@@ -2,7 +2,11 @@
 #define SYSTICK_H
 
 #include "main.h"
+#include "pendsv.h"
+#define TIMESLICE (20)
 
-void systick_enable(void);
+extern volatile unsigned long jiffies;
+
+void systick_init(void);
 
 #endif

@@ -2,6 +2,7 @@
 #define KERNEL_INTERNAL_H
 
 #include "main.h"
+#define MAX_TASKS 8
 
 extern uint32_t stack_space;
 #define STACK_SIZE (128)
@@ -21,6 +22,9 @@ struct task_block{
     uint32_t *sp;
 };
 
+extern struct task_block TASKS[MAX_TASKS];
+#define kernel TASKS[0]
+
 struct stack_frame{
     uint32_t r0, r1, r2, r3, r12, lr, pc, xpsr;
 };
@@ -29,8 +33,6 @@ struct extra_frame{
     uint32_t r4, r5, r6, r7, r8, r9, r10, r11;
 };
 
-#define MAX_TASKS 8
-#define kernel TASKS[0]
 
 struct task_block *task_create (char* name, void (*start)(void 
 *arg), void *arg);
