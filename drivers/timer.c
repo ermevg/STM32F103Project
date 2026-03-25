@@ -17,29 +17,28 @@
 
 #define TIM2_EGR_UPDATE (1 << 0)
 #define TIM2_CEN (1 << 0)
-#define TIM2_ARR_CNT (150)
+#define TIM2_ARR_CNT (0xFFFF)
 #define TIM2_IRQ_EN (1 << 0)
 #define TIM2_UIF (1 << 0)
 
 #define TIM2_IRQn 28
 
 
-void TIM2_1ms_Init(void)
+void tim2_1ms_init(void)
 {
     RCC_APB1ENR |= RCC_TIM2_EN;
     TIM2_PSC = 15999;
     TIM2_ARR = TIM2_ARR_CNT;
     TIM2_EGR |= TIM2_EGR_UPDATE;
     TIM2_SR &= ~(TIM2_EGR_UPDATE);
-    nvic_irq_enable(TIM2_IRQn);
-    TIM2_DIER |= TIM2_IRQ_EN;
+    //nvic_irq_enable(TIM2_IRQn);
+    //TIM2_DIER |= TIM2_IRQ_EN;
     TIM2_CR1 |= TIM2_CEN;
 }
 
-uint32_t GET_TIM2_CNT(void)
+uint16_t get_tim2_cnt(void)
 {
-    uint32_t cnt = TIM2_CNT;
-    return cnt;
+    return TIM2_CNT;
 }
 
 void TIM2_IRQHandler(void)

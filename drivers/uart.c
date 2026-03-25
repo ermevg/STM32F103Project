@@ -26,6 +26,10 @@
 #define USART1_BD (0x8B) // 139
 #define USART1_TXE (1 << 7)
 #define USART1_RXNE (1 << 5)
+#define USART1_RXNEIE (1 << 5)
+
+#define USART1_IRQn (37)
+
 
 void init_uart1(void)
 {
@@ -35,9 +39,12 @@ void init_uart1(void)
     GPIOA_CRH |= GPIOA_SET_PA9_PA10_MODE;
     GPIOA_ODR |= GPIOA_PA10_PULL_UP;
     USART1_BRR = USART1_BD;
+    USART1_CR1 |= USART1_RXNEIE;
+    nvic_irq_enable(USART1_IRQn);
     USART1_CR1 |= USART1_TX_EN;
     USART1_CR1 |= USART1_RX_EN;
     USART1_CR1 |= USART1_EN;
+    
 }
 
 void uart1_send_string(char* buffer)
@@ -92,4 +99,35 @@ uint8_t uart1_recieve(void)
 {
     while (!(USART1_SR & USART1_RXNE));
     return (uint8_t)USART1_DR;
+}
+
+void USART1_IRQHandler(void)
+{
+    uint8_t data = 0;
+
+    if(USART1_SR & USART1_RXNE)
+    {
+        data = USART1_DR;
+
+        uart1_send_char(data);
+        
+            if(data == 'R')
+        {
+            lcd_clear_full(LCD_RED);
+        }
+        else if (data == 'G')
+        {
+            lcd_clear_full(LCD_GREEN);
+        }
+        else if (data == 'B')
+        {
+            lcd_clear_full(LCD_BLUE);
+        }
+        else
+        {
+            lcd_clear_full(LCD_WHITE);
+        }
+    
+    }
+    
 }

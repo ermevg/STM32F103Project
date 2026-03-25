@@ -2,6 +2,8 @@
 #define UART_H
 
 #include "main.h"
+#include "nvic_config.h"
+#include "lcd.h"
 
 void init_uart1(void);
 

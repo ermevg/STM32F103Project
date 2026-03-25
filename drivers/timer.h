@@ -5,8 +5,8 @@
 #include "nvic_config.h"
 #include "gpio.h"
 
-void TIM2_1ms_Init(void);
+void tim2_1ms_init(void);
 
-uint32_t GET_TIM2_CNT(void);
+uint16_t get_tim2_cnt(void);
 
 #endif
