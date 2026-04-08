@@ -2,11 +2,13 @@
 #define KERNEL_INTERNAL_H
 
 #include "main.h"
+#include "pendsv.h"
+
 #define MAX_TASKS 8
 
 extern uint32_t stack_space;
 #define STACK_SIZE (128)
-
+#define TASK_TIMESLICE (20)
 #define TASK_WAITING 0
 #define TASK_READY 1
 #define TASK_RUNNING 2
@@ -20,7 +22,11 @@ struct task_block{
     void (*start)(void *arg);
     void *arg;
     uint32_t *sp;
+    uint32_t wakeup_time;
+    struct task_block *next;
 };
+
+extern volatile unsigned long jiffies;
 
 extern struct task_block TASKS[MAX_TASKS];
 #define kernel TASKS[0]
@@ -38,5 +44,8 @@ struct task_block *task_create (char* name, void (*start)(void
 *arg), void *arg);
 
 void task_terminated(void);
+
+void sleep_ms(int ms);
+
 
 #endif
