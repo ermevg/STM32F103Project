@@ -38,6 +38,7 @@ void init_uart1(void)
     USART1_CR1 |= USART1_TX_EN;
     USART1_CR1 |= USART1_RX_EN;
     USART1_CR1 |= USART1_EN;
+    
 }
 
 void uart1_send_string(char* buffer)
