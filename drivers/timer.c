@@ -27,7 +27,7 @@
 void tim2_1ms_init(void)
 {
     RCC_APB1ENR |= RCC_TIM2_EN;
-    TIM2_PSC = 15999;
+    TIM2_PSC = 35999;
     TIM2_ARR = TIM2_ARR_CNT;
     TIM2_EGR |= TIM2_EGR_UPDATE;
     TIM2_SR &= ~(TIM2_EGR_UPDATE);

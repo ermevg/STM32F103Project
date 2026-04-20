@@ -28,13 +28,18 @@
 #define RCC_PLL_ON (1 << 24)
 #define RCC_PLL_SW (2 << 0)
 #define PLL_MULL0 (0xF << 18)
+#define PLL_MULL9 (0x7 << 18)
 
 #define RCC_SW_RESET (~(0x03))
 #define PLL_SRC (1 << 16)
 #define RCC_SYSCLK_PLL (2 << 2)
+#define RCC_CFGR_PPRE1_4 (0x5 << 8)
+#define RCC_CFGR_PPRE1_RESET (0X7 << 8)
+
 
 #define FLASH_ACR (*(volatile uint32_t*) 0x40022000)
 #define FLASH_ACR_LATENCY0 (7 << 0) 
+#define FLASH_ACR_LATENCY_2WS (0x2)
 
 
 void SystemInit(void)
@@ -44,7 +49,7 @@ void SystemInit(void)
     RCC_CIR = RCC_RESET;
 }
 
-void SystemClock_Config(void)
+void SystemClock_Config_16MHZ(void)
 {
     RCC_CR |= RCC_HSE_ON;
     while(!(RCC_CR & RCC_HSE_RDY));
@@ -62,6 +67,27 @@ void SystemClock_Config(void)
 
     while(!(RCC_CFGR & RCC_SYSCLK_PLL));
 }
+
+void SystemClock_Config_72MHZ(void)
+{
+    RCC_CR |= RCC_HSE_ON;
+    while(!(RCC_CR & RCC_HSE_RDY));
+
+    FLASH_ACR &= ~FLASH_ACR_LATENCY0;
+    FLASH_ACR |= FLASH_ACR_LATENCY_2WS;
+
+    RCC_CFGR &= ~(PLL_MULL0 | PLL_SRC | RCC_CFGR_PPRE1_RESET);
+    RCC_CFGR |= PLL_MULL9 | PLL_SRC | RCC_CFGR_PPRE1_4;
+
+    RCC_CR |= RCC_PLL_ON;
+    while(!(RCC_CR & RCC_PLL_RDY));
+
+    RCC_CFGR &= RCC_SW_RESET;
+    RCC_CFGR |= RCC_PLL_SW;
+
+    while(!(RCC_CFGR & RCC_SYSCLK_PLL));
+}
+
 
 void SYSCLK_CHECK(void)
 {

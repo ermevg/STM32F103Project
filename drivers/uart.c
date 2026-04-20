@@ -23,7 +23,7 @@
 #define USART1_EN (1 << 13)
 #define USART1_TX_EN (1 << 3)
 #define USART1_RX_EN (1 << 2)
-#define USART1_BD (0x8B) // 139
+#define USART1_BD (0x271) // 139
 #define USART1_TXE (1 << 7)
 #define USART1_RXNE (1 << 5)
 #define USART1_RXNEIE (1 << 5)
@@ -111,7 +111,7 @@ void USART1_IRQHandler(void)
 
         uart1_send_char(data);
         
-            if(data == 'R')
+        if(data == 'R')
         {
             lcd_clear_full(LCD_RED);
         }

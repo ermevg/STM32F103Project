@@ -34,5 +34,6 @@ void lcd_send_data(uint8_t cmd);
 void lcd_send_cmd(uint8_t cmd);
 void lcd_clear_full(uint16_t color);
 void spi_wait_idle(void);
+void lcd_get_image(const uint16_t* data);
 
 #endif

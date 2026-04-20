@@ -21,9 +21,10 @@
 #define SPI1_SR (*(volatile uint32_t*) (SPI1_BASE + 0x08))
 #define SPI1_DR (*(volatile uint32_t*) (SPI1_BASE + 0x0C))
 
+#define SPI1_RESET (0)
 #define SPI1_APB2_CLOCK_EN (1 << 12)
 #define SPI1_MODE_MSTR (1 << 2)
-#define SPI1_MODE_BR (0x0 << 3)
+#define SPI1_MODE_BR (0x1 << 3)
 #define SPI1_MODE_SSM (1 << 9)
 #define SPI1_MODE_SSI (1 << 8)
 #define SPI1_EN (1 << 6)
@@ -101,6 +102,7 @@ void hardware_init(void)
     GPIOA_CRL |= (PA_MODE_OUTPUT_PUSH_PULL_50MHZ_AF << ((PIN_SCK) * 4));
     GPIOA_CRL |= (PA_MODE_OUTPUT_PUSH_PULL_50MHZ_AF << ((PIN_MOSI) * 4));
 
+    SPI1_CR1 &= SPI1_RESET;
     SPI1_CR1 = (SPI1_MODE_BR | SPI1_MODE_MSTR | SPI1_MODE_SSM | SPI1_MODE_SSI | (1 << 1) | (1 << 0));
     SPI1_CR1 |= SPI1_EN;
 
@@ -160,4 +162,32 @@ void lcd_clear_full(uint16_t color) {
         spi_lcd_transmit(color >> 8);   // Старший байт
         spi_lcd_transmit(color & 0xFF); // Младший байт
     }
+}
+
+void lcd_get_image(const uint16_t* data)
+{
+
+    lcd_send_cmd(0x2A); // Columns
+    lcd_send_data(0x00); lcd_send_data(0x00); // Start 0
+    lcd_send_data(0x00); lcd_send_data(0x9F); // End 159
+
+    lcd_send_cmd(0x2B); // Rows
+    lcd_send_data(0x00); lcd_send_data(0x00); // Start 0
+    lcd_send_data(0x00); lcd_send_data(0x9F); // End 159
+
+    // 2. Команда записи в память
+    lcd_send_cmd(0x2C); 
+    
+    // Переключаемся в режим данных
+
+
+    spi_wait_idle();
+    gpio_set(PIN_DC);
+
+    for (uint32_t i = 0; i < (160 * 160); i++) {
+        spi_lcd_transmit(data[i] >> 8);   // Старший байт
+        spi_lcd_transmit(data[i] & 0xFF); // Младший байт
+
+    }
+
 }
