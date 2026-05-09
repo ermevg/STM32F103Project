@@ -1,5 +1,5 @@
 #include "timer.h"
-
+#include "spi.h"
 
 #define RCC_BASE (0x40021000)
 #define RCC_APB1ENR (*(volatile uint32_t*) (RCC_BASE + 0x1C))
@@ -17,7 +17,7 @@
 
 #define TIM2_EGR_UPDATE (1 << 0)
 #define TIM2_CEN (1 << 0)
-#define TIM2_ARR_CNT (150)
+#define TIM2_ARR_CNT (499)
 #define TIM2_IRQ_EN (1 << 0)
 #define TIM2_UIF (1 << 0)
 
@@ -44,7 +44,10 @@ uint32_t GET_TIM2_CNT(void)
 
 void TIM2_IRQHandler(void)
 {
-    
-    
+    if(TIM2_SR & TIM2_UIF)
+    {
+        TIM2_SR &= ~TIM2_UIF;
+    }
+    spi_transmit(0xABCD);
     
 }
