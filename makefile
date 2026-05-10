@@ -28,7 +28,7 @@ BINARY = $(BUILD_DIR)/firmware.bin
 # Флаги линковки: 
 # 1. --specs=nosys.specs убирает ошибки _write, _read, _sbrk
 # 2. -Wl,--gc-sections удаляет неиспользуемый код
-LDFLAGS = -mcpu=$(MCU) -mthumb -T STM32F103C8TX_FLASH.ld --specs=nosys.specs -Wl,-Map=$(BUILD_DIR)/firmware.map -Wl,--gc-sections
+LDFLAGS = -mcpu=$(MCU) -mthumb -T STM32F103C8TX_FLASH.ld --specs=nano.specs -Wl,-Map=$(BUILD_DIR)/firmware.map -Wl,--gc-sections
 
 C_SRC := $(wildcard *.c ) $(wildcard sys_init/*.c ) $(wildcard drivers/*.c )
 S_SRC := Startup/startup_stm32f103c8tx.s
